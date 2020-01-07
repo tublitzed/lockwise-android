@@ -15,6 +15,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import mozilla.lockbox.action.DialogAction
 import mozilla.lockbox.action.ItemDetailAction
 import mozilla.lockbox.action.RouteAction
+import mozilla.lockbox.action.ToastNotificationAction
 import mozilla.lockbox.flux.Action
 import mozilla.lockbox.flux.Dispatcher
 import mozilla.lockbox.log
@@ -153,6 +154,7 @@ class CreateItemPresenterTest {
         dispatcherObserver.assertValueSequence(
             listOf(
                 ItemDetailAction.CreateItemSaveChanges,
+                ToastNotificationAction.ShowSuccessfulCreateToast,
                 RouteAction.ItemList
             )
         )

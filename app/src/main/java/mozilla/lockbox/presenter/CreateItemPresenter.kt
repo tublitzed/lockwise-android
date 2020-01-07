@@ -43,11 +43,14 @@ class CreateItemPresenter(
             .addTo(compositeDisposable)
     }
 
-    override fun saveChangesAction(hasChanges: Boolean): ItemDetailAction {
+    override fun saveChangesAction(hasChanges: Boolean): List<Action> {
         return if (hasChanges) {
-            ItemDetailAction.CreateItemSaveChanges
+            listOf(
+                ItemDetailAction.CreateItemSaveChanges,
+                ToastNotificationAction.ShowSuccessfulCreateToast
+            )
         } else {
-            ItemDetailAction.EndCreateItemSession
+            listOf(ItemDetailAction.EndCreateItemSession)
         }
     }
 
@@ -61,8 +64,7 @@ class CreateItemPresenter(
 
     override fun endEditingAction(): List<Action> {
         return listOf(
-            RouteAction.ItemList,
-            ToastNotificationAction.ShowSuccessfulCreateToast
+            RouteAction.ItemList
         )
     }
 

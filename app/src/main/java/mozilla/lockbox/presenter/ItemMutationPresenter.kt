@@ -16,8 +16,8 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import mozilla.lockbox.R
 import mozilla.lockbox.action.ItemDetailAction
 import mozilla.lockbox.flux.Action
-import mozilla.lockbox.flux.Presenter
 import mozilla.lockbox.flux.Dispatcher
+import mozilla.lockbox.flux.Presenter
 import mozilla.lockbox.store.ItemDetailStore
 import mozilla.lockbox.support.Optional
 import mozilla.lockbox.support.asOptional
@@ -65,7 +65,11 @@ abstract class ItemMutationPresenter(
         view.saveEntryClicks
             .flatMap { itemDetailStore.isDirty.take(1) }
             .map { saveChangesAction(it) }
-            .subscribe(dispatcher::dispatch)
+            .subscribe { itemDetailActions ->
+                itemDetailActions.filterNotNull().forEach { action ->
+                    dispatcher.dispatch(action)
+                }
+            }
             .addTo(compositeDisposable)
 
         view.usernameChanged
@@ -146,6 +150,6 @@ abstract class ItemMutationPresenter(
     }
 
     abstract fun dismissChangesAction(hasChanges: Boolean): Action
-    abstract fun saveChangesAction(hasChanges: Boolean): ItemDetailAction
+    abstract fun saveChangesAction(hasChanges: Boolean): List<Action?>
     abstract fun endEditingAction(): List<Action>
 }
